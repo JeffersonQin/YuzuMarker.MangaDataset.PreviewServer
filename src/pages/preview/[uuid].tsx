@@ -24,7 +24,7 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params } : { params: { uuid: string } }) {
   // get all images under public/images/{params.uuid}
   // then sort them by name (converting the name without extension to number)
   const folderPath = path.join(process.cwd(), "public", "images", params.uuid);
@@ -43,7 +43,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default function Preview({ images }) {
+export default function Preview({ images } : { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextImage = () => {
