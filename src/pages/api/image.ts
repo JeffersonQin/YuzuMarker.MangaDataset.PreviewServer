@@ -2,9 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs/promises";
 import path from "path";
-import { readFile } from "fs";
-
-const { API_KEY } = process.env;
 
 type Data = { index: number; uuid: string; key: string };
 
