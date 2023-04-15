@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
+const { API_KEY } = process.env;
+
 type Data = {
   uuid: string;
   msg: string;
@@ -28,8 +30,25 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "POST") {
-    const { images } = await req.body;
+    const { images, key } = await req.body;
+    if (key !== API_KEY) {
+      res.status(401).json({ uuid: "", msg: "invalid key" });
+      return;
+    }
     const folderUUID = saveImages(images, "public/images");
+
+    // Start the task with a delay of 3 days
+    setTimeout(async () => {
+      try {
+        await fs.promises.rmdir(`public/images/${folderUUID}`, {
+          recursive: true,
+        });
+        console.log(`Preview ${folderUUID} deleted successfully`);
+      } catch (err) {
+        console.error("Error deleting files:", err);
+      }
+    }, 259200000); // 3 days in milliseconds
+
     res.status(200).json({ uuid: folderUUID, msg: "success" });
   } else {
     res.status(404).json({ uuid: "", msg: "use POST to send message" });
