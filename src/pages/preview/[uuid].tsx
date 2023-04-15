@@ -11,34 +11,21 @@ export async function getServerSideProps({ params } : { params: { uuid: string }
   const folderPath = path.join(process.cwd(), "images", params.uuid);
   const images = await fs.readdir(folderPath);
 
-  const sortedImages = images.sort((a, b) => {
-    const aNum = parseInt(path.parse(a).name);
-    const bNum = parseInt(path.parse(b).name);
-    return aNum - bNum;
-  }).map((image) => path.join('images', params.uuid, image));
-
   return {
     props: {
-      images: sortedImages,
+      length: images.length,
+      uuid: params.uuid,
     },
   };
 }
 
-const getBase64 = async (filePath: string) => {
-  const data = await fs.readFile(filePath, { encoding: 'base64' });
-  const ext = path.extname(filePath).replace('.', '');
-  return `data:image/${ext};base64,${data}`;
-}
-
-export default async function Preview({ images } : { images: string[] }) {
+export default async function Preview({ length, uuid } : { length: number, uuid: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentImage, setCurrentImage] = useState(await getBase64(images[0]));
 
   const nextImage = async () => {
-    if (currentIndex < images.length - 1) {
+    if (currentIndex < length - 1) {
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
-      setCurrentImage(await getBase64(images[newIndex]));
     }
   };
 
@@ -46,7 +33,6 @@ export default async function Preview({ images } : { images: string[] }) {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
-      setCurrentImage(await getBase64(images[newIndex]));
     }
   };
 
@@ -54,14 +40,14 @@ export default async function Preview({ images } : { images: string[] }) {
     <div className="flex flex-col h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 dark:from-blue-900 dark:via-purple-800 dark:to-pink-900">
       <div className="flex justify-center items-center bg-gray-100 py-2 bg-gray-100 dark:bg-gray-800">
         <p className="font-semibold text-gray-800 dark:text-gray-100">
-          {currentIndex + 1} / {images.length}
+          {currentIndex + 1} / {length}
         </p>
       </div>
       <div className="flex-grow relative">
         <img
           className="absolute top-0 left-0 w-full h-full object-scale-down"
-          src={currentImage}
-          alt={images[currentIndex]}
+          src={`/api/image?uuid=${uuid}&index=${currentIndex}`}
+          alt={`Image ${currentIndex + 1}`}
         />
         <div
           onClick={prevImage}
