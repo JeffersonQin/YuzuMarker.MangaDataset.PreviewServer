@@ -4,27 +4,8 @@ import path from "path";
 import { useState } from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
-export async function getStaticPaths() {
-  // get all folder names under public/images
-  const imageFolders = await fs.readdir(
-    path.join(process.cwd(), "public", "images"),
-    { withFileTypes: true }
-  );
-  const uuids = imageFolders
-    .filter((folder) => folder.isDirectory())
-    .map((folder) => folder.name);
 
-  const paths = uuids.map((uuid) => ({
-    params: { uuid },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps({ params } : { params: { uuid: string } }) {
+export async function getServerSideProps({ params } : { params: { uuid: string } }) {
   // get all images under public/images/{params.uuid}
   // then sort them by name (converting the name without extension to number)
   const folderPath = path.join(process.cwd(), "public", "images", params.uuid);
