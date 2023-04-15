@@ -19,17 +19,17 @@ export async function getServerSideProps({ params } : { params: { uuid: string }
   };
 }
 
-export default async function Preview({ length, uuid } : { length: number, uuid: string }) {
+export default function Preview({ length, uuid } : { length: number, uuid: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextImage = async () => {
+  const nextImage = () => {
     if (currentIndex < length - 1) {
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
     }
   };
 
-  const prevImage = async () => {
+  const prevImage = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
