@@ -1,3 +1,22 @@
+# YuzuMarker.MangaDataset.PreviewServer
+
+## Description
+
+This is a preview server for [YuzuMarker.MangaDataset](https://github.com/JeffersonQin/YuzuMarker.MangaDataset).
+
+## Usage
+
+```bash
+npm run build
+sudo -E env API_KEY=<API_KEY> npm run start
+```
+
+where `API_KEY` is the access token.
+
+Together with https://github.com/JeffersonQin/YuzuMarker.MangaDataset/blob/master/.github/workflows/preview.yml will make a preview for each pull request.
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
