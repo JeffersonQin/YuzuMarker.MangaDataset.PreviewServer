@@ -9,7 +9,7 @@ const { API_KEY } = process.env;
 type Data = { index: number; uuid: string; key: string };
 
 const getImages = async (uuid: string): Promise<string[]> => {
-  const folderPath = path.join(process.cwd(), "images", uuid);
+  const folderPath = path.join("/tmp", uuid);
   const images = await fs.readdir(folderPath);
 
   const sortedImages = images
@@ -18,7 +18,7 @@ const getImages = async (uuid: string): Promise<string[]> => {
       const bNum = parseInt(path.parse(b).name);
       return aNum - bNum;
     })
-    .map((image) => path.join("images", uuid, image));
+    .map((image) => path.join("/tmp", uuid, image));
 
   return sortedImages;
 };

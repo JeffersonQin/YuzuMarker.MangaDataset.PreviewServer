@@ -27,12 +27,12 @@ export default async function handler(
     return;
   }
   try {
-    const folderUUID = createFolder(`images`);
+    const folderUUID = createFolder(`/tmp`);
 
     // Start the task with a delay of 3 days
     setTimeout(async () => {
       try {
-        await fs.promises.rmdir(`images/${folderUUID}`, {
+        await fs.promises.rmdir(`/tmp/${folderUUID}`, {
           recursive: true,
         });
         console.log(`Preview ${folderUUID} deleted successfully`);

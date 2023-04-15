@@ -6,9 +6,9 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 
 export async function getServerSideProps({ params } : { params: { uuid: string } }) {
-  // get all images under public/images/{params.uuid}
+  // get all images under .../{params.uuid}
   // then sort them by name (converting the name without extension to number)
-  const folderPath = path.join(process.cwd(), "images", params.uuid);
+  const folderPath = path.join('/tmp', params.uuid);
   const images = await fs.readdir(folderPath);
 
   return {

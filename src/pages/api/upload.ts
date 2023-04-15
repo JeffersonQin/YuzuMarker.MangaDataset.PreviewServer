@@ -27,7 +27,7 @@ export default async function handler(
       return;
     }
     try {
-      saveImages(image, `images/${uuid}`);
+      saveImages(image, `/tmp/${uuid}`);
       res.status(200).json({ msg: "success" });
     } catch (err) {
       console.error("Error deleting files:", err);
