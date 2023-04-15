@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 
-export async function getServerSideProps({ params } : { params: { length: number, uuid: string } }) {
+export async function getServerSideProps({ params } : { params: { uuid: string } }) {
   // get all images under public/images/{params.uuid}
   // then sort them by name (converting the name without extension to number)
   const folderPath = path.join(process.cwd(), "images", params.uuid);
