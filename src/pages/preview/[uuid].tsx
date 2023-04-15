@@ -8,14 +8,14 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 export async function getServerSideProps({ params } : { params: { uuid: string } }) {
   // get all images under public/images/{params.uuid}
   // then sort them by name (converting the name without extension to number)
-  const folderPath = path.join(process.cwd(), "public", "images", params.uuid);
+  const folderPath = path.join(process.cwd(), "images", params.uuid);
   const images = await fs.readdir(folderPath);
 
   const sortedImages = images.sort((a, b) => {
     const aNum = parseInt(path.parse(a).name);
     const bNum = parseInt(path.parse(b).name);
     return aNum - bNum;
-  }).map((image) => path.join('/', 'images', params.uuid, image));
+  }).map((image) => path.join('images', params.uuid, image));
 
   return {
     props: {
@@ -24,18 +24,29 @@ export async function getServerSideProps({ params } : { params: { uuid: string }
   };
 }
 
-export default function Preview({ images } : { images: string[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const getBase64 = async (filePath: string) => {
+  const data = await fs.readFile(filePath, { encoding: 'base64' });
+  const ext = path.extname(filePath).replace('.', '');
+  return `data:image/${ext};base64,${data}`;
+}
 
-  const nextImage = () => {
+export default async function Preview({ images } : { images: string[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentImage, setCurrentImage] = useState(await getBase64(images[0]));
+
+  const nextImage = async () => {
     if (currentIndex < images.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+      setCurrentImage(await getBase64(images[newIndex]));
     }
   };
 
-  const prevImage = () => {
+  const prevImage = async () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      setCurrentImage(await getBase64(images[newIndex]));
     }
   };
 
@@ -49,7 +60,7 @@ export default function Preview({ images } : { images: string[] }) {
       <div className="flex-grow relative">
         <img
           className="absolute top-0 left-0 w-full h-full object-scale-down"
-          src={images[currentIndex]}
+          src={currentImage}
           alt={images[currentIndex]}
         />
         <div

@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as fs from "fs";
-import { v4 as uuidv4 } from "uuid";
 
 const { API_KEY } = process.env;
 
@@ -28,7 +27,7 @@ export default async function handler(
       return;
     }
     try {
-      saveImages(image, `public/images/${uuid}`);
+      saveImages(image, `images/${uuid}`);
       res.status(200).json({ msg: "success" });
     } catch (err) {
       console.error("Error deleting files:", err);
